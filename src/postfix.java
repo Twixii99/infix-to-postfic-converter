@@ -18,8 +18,9 @@ public class postfix implements IExpressionEvaluator{
 	 */
 	@Override
 	public String infixToPostfix(String expression) {
-		if(!count(expression)) {
-			System.out.println("Mismatched parentheses.");
+		expression = standard(expression);
+		if(!count(expression) | !check3(expression)) {
+			System.out.println("Wrong expression or Mismatching");
 			return null;
 		}
 		String ans = "";
@@ -60,7 +61,11 @@ public class postfix implements IExpressionEvaluator{
 	 */
 	@Override
 	public int evaluate(String expression) {
-		final String notations = "+-/*";
+		if(!check2(expression)) {
+			System.out.println("HAS A LETTER.");
+			return Integer.MAX_VALUE;
+		}
+		final String notations = "+-/*^";
 		String you;
 		String ans[] = expression.split("\\s");
 		MyStack finalAns = new MyStack();
@@ -94,6 +99,8 @@ public class postfix implements IExpressionEvaluator{
 				return String.valueOf(Double.parseDouble(a) * Double.parseDouble(b));
 			case "/":
 				return String.valueOf(Double.parseDouble(a) / Double.parseDouble(b));
+			case "^":
+				return String.valueOf(Math.pow(Double.parseDouble(a), Double.parseDouble(b)));
 		}
 		return null;
 	}
@@ -157,5 +164,49 @@ public class postfix implements IExpressionEvaluator{
 		}
 		ans += args.charAt(args.length()-1);
 		return ans;
+	}
+	/**
+	 * the if the postfix expression has a Letter
+	 * @param a postfix expression
+	 * @return true if not has a letter
+	 */
+	public boolean check2(String a) {
+		for(char ch: a.toCharArray()) {
+			if(Character.isLetter(ch))
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 *@param infix expression
+	 *@return true iff direct exp 
+	 *
+	 */
+	public boolean check3(String a) {
+		String note = "+-*/^";
+		if(note.indexOf(a.charAt(0)) != -1 | note.indexOf(a.charAt(a.length()-1)) != -1)
+			return false;
+		for(int i = 0; i < a.length()-1; i++) {
+			if(note.indexOf(a.charAt(i)) != -1 && note.indexOf(a.charAt(i+2)) != -1)
+				return false;
+		}
+		return true;
+	}
+	/**
+	 * @param a infix exp
+	 * @return standard edition
+	 */
+	public static String standard(String a) {
+		String stand = "", note = "+-*/^";
+		for(int i = 0; i < a.length()-1; i++) {
+			if(((Character.isLetter(a.charAt(i))||Character.isDigit(a.charAt(i)))&&note.indexOf(a.charAt(i+1)) != -1)|
+				(note.indexOf(a.charAt(i)) != -1 && (Character.isDigit(a.charAt(i+1)) || Character.isLetter(a.charAt(i+1))))
+				|(note.indexOf(a.charAt(i)) != -1 && note.indexOf(a.charAt(i+1)) != -1))
+			{	stand += a.charAt(i); stand += ' ';}
+			else
+			stand += a.charAt(i);		
+		}
+		return stand += a.charAt(a.length()-1);
 	}
 }
