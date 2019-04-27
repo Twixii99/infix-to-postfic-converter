@@ -5,7 +5,6 @@ import java.util.Scanner;
 public class MainOfPostfix {
 	public static void main(String[] args) {
 		postfix post = new postfix();
-		postfixAotherAlgo algo = new postfixAotherAlgo();
 		Scanner token = new Scanner(System.in);
 		
 		String expression = token.nextLine();
@@ -15,10 +14,10 @@ public class MainOfPostfix {
 			System.out.println("WRONG ARTHIMATIC EXPRESSION");
 		else { 
 			System.out.println(ans);
-			System.out.println(post.evaluate(ans));
+			int x = post.evaluate(ans);
+			if(x != Integer.MAX_VALUE)
+				System.out.println(x);
 		}
 	}
 }
-//(4 + 8) * (6 - 5) / ((3 - 2) * (2 + 2 ))
-//(63 + (24 * 2) / 16) + ((55 - 2) / 12 * (33 / 3))
 
